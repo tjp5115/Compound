@@ -1,24 +1,22 @@
 package com.compound.request.json.alpha.vantage;
 
 import com.google.api.client.util.Key;
-import com.google.gson.annotations.SerializedName;
 
 public class AlphaVantageStock {
 
   @Key("1. open")
-  public String open;
+  public double open;
 
   @Key("2. high")
-  public String high;
+  public double high;
 
   @Key("3. low")
-  public String low;
+  public double low;
 
   @Key("4. close")
-  public String close;
+  public double close;
 
   @Key("5. volume")
-  public String volume;
-
+  public double volume;
 
 }

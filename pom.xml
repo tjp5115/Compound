@@ -5,8 +5,13 @@
   <groupId>com.compound</groupId>
   <artifactId>Compound</artifactId>
   <version>1.0-SNAPSHOT</version>
+
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -47,6 +52,11 @@
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client-gson</artifactId>
       <version>1.21.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <version>1.5.7.RELEASE</version>
     </dependency>
   </dependencies>
 </project>

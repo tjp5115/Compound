@@ -6,7 +6,13 @@ import java.util.Map;
 
 public class AlphaVantageJson {
   @Key("Weekly Time Series")
-  public Map<String,AlphaVantageStock> list;
+  public Map<String,AlphaVantageStock> weeklyData ;
   @Key("Meta Data")
   public Map<String,String> metaData;
+
+
+  public String toString(){
+    StringBuilder string = new StringBuilder();
+    return string.toString();
+  }
 }
