@@ -23,7 +23,7 @@ public class CompoundController {
   static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
   static final JsonFactory JSON_FACTORY = new GsonFactory();
 
- @CrossOrigin(origins = "http://localhost:9000")
+  @CrossOrigin(origins = "http://localhost:4200")
   @GetMapping("/stock")
   public AlphaVantageStock stock(@RequestParam(required = true, defaultValue="MSFT") String stock){
     HttpRequestFactory requestFactory =
