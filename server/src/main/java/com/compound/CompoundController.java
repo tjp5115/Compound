@@ -25,7 +25,7 @@ public class CompoundController {
 
   @CrossOrigin(origins = "http://localhost:4200")
   @GetMapping("/stock")
-  public AlphaVantageStock stock(@RequestParam(required = true, defaultValue="MSFT") String stock){
+  public AlphaVantageJson stock(@RequestParam(required = true, defaultValue="MSFT") String stock){
     HttpRequestFactory requestFactory =
         HTTP_TRANSPORT.createRequestFactory(request -> request.setParser(new JsonObjectParser(JSON_FACTORY)));
     AlphaVantageUrl url = new AlphaVantageUrl("https://www.alphavantage.co/query?function=TIME_SERIES_WEEKLY&symbol=MSFT&apikey=F3B3RCENZP5N8YWC");
@@ -38,7 +38,7 @@ public class CompoundController {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    return json.weeklyData.values().iterator().next();
+    return json;
   }
 
 }

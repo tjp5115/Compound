@@ -5,7 +5,7 @@ import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { SearchStockComponent } from './search-stock/search-stock.component';
 import { StockService } from './shared/stock/stock.service';
-
+import { ChartsModule } from 'ng2-charts';
 @NgModule({
   declarations: [
     AppComponent,
@@ -13,7 +13,8 @@ import { StockService } from './shared/stock/stock.service';
   ],
   imports: [
     BrowserModule,
-    HttpModule
+    HttpModule,
+    ChartsModule
   ],
   providers: [StockService],
   bootstrap: [AppComponent]
