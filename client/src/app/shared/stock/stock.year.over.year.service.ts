@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Http, Response } from '@angular/http';
-import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/map'
 import { Observable } from 'rxjs';
 
 @Injectable()
-export class StockService {
+export class StockYearOverYearService {
 
 constructor(private http: Http) {}
 
-  getAll(): Observable<any> {
-    return this.http.get('http://localhost:8080/stock')
+  getAll(symbol : String): Observable<any> {
+    return this.http.get('http://localhost:8080/stock/year-over-year/?symbol='+symbol)
       .map((response: Response) => response.json());
   }
 }

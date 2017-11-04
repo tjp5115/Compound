@@ -1,1 +1,1 @@
-export * from './stock/stock.service';
+export * from './stock/stock.year.over.year.service';

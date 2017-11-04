@@ -4,7 +4,7 @@ import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
 import { SearchStockComponent } from './search-stock/search-stock.component';
-import { StockService } from './shared/stock/stock.service';
+import { StockYearOverYearService } from './shared/stock/stock.year.over.year.service';
 import { ChartsModule } from 'ng2-charts';
 @NgModule({
   declarations: [
@@ -16,7 +16,7 @@ import { ChartsModule } from 'ng2-charts';
     HttpModule,
     ChartsModule
   ],
-  providers: [StockService],
+  providers: [StockYearOverYearService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

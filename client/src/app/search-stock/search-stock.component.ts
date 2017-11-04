@@ -1,20 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { StockService } from '../shared';
+import { StockYearOverYearService } from '../shared';
 
 @Component({
   selector: 'app-search-stock',
   templateUrl: './search-stock.component.html',
   styleUrls: ['./search-stock.component.css'],
-  providers: [StockService]
+  providers: [StockYearOverYearService]
 })
 export class SearchStockComponent implements OnInit {
   public lineChartData:Array<any> = new Array;
   public lineChartLabels:Array<any> = new Array;
 
-  constructor(private stockService: StockService) { }
+  constructor(private stockService: StockYearOverYearService) { }
 
   ngOnInit() {
-    this.stockService.getAll().subscribe(
+    this.stockService.getAll("MSFT").subscribe(
       stockDatadata => {
         var json = stockDatadata.weeklyData ;
         var chartData : Array<any> = new Array;
@@ -33,7 +33,7 @@ export class SearchStockComponent implements OnInit {
 
   // lineChart
   public lineChartOptions:any = {
-    responsive: true
+    responsive: false
   };
   public lineChartColors:Array<any> = [
     { // grey
