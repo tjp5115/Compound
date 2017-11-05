@@ -16,11 +16,11 @@ export class SearchStockComponent implements OnInit {
   ngOnInit() {
     this.stockService.getAll("MSFT").subscribe(
       stockDatadata => {
-        var json = stockDatadata.weeklyData ;
+        var json = stockDatadata.dateStock;
         var chartData : Array<any> = new Array;
         Object.keys(json).forEach( key =>{
           this.lineChartLabels.push(key);
-          chartData.push(json[key].close);
+          chartData.push(json[key].value);
         });
         this.lineChartData.push({data : chartData, label : 'Stock' });
 

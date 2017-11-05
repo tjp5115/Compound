@@ -4,7 +4,9 @@ import com.google.api.client.util.Key;
 
 import java.util.Map;
 
-public class AlphaVantageJson {
+public abstract class AlphaVantageJson {
   @Key("Meta Data")
   public Map<String,String> metaData;
+
+  public abstract Map<String,AlphaVantageStock> getStockData();
 }
