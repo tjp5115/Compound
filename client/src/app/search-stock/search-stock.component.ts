@@ -10,20 +10,23 @@ import { StockYearOverYearService } from '../shared';
 export class SearchStockComponent implements OnInit {
   public lineChartData:Array<any> = new Array;
   public lineChartLabels:Array<any> = new Array;
-
+  public json : any;
   constructor(private stockService: StockYearOverYearService) { }
 
   ngOnInit() {
     this.stockService.getAll("MSFT").subscribe(
       stockDatadata => {
-        var json = stockDatadata.dateStock;
-        var chartData : Array<any> = new Array;
-        Object.keys(json).forEach( key =>{
-          this.lineChartLabels.push(key);
-          chartData.push(json[key].value);
+        this.json = stockDatadata.Year;
+        Object.keys(this.json).forEach( year =>{
+          var chartData : Array<number> = new Array(52);
+          var yearData = this.json[year].WeekOfYearToStock;
+          Object.keys(yearData).forEach( weekNumber =>{
+            chartData[parseInt(weekNumber)-1] = yearData[weekNumber].value;
+          });
+          this.lineChartData.push({data : chartData, label : year, fill : false });
         });
-        this.lineChartData.push({data : chartData, label : 'Stock' });
-
+        this.lineChartLabels = Array.from(new Array(52),(val,index)=>index+1);
+        this.json = JSON.stringify(this.json);
       },
       error => console.log(error)
     )
@@ -33,34 +36,9 @@ export class SearchStockComponent implements OnInit {
 
   // lineChart
   public lineChartOptions:any = {
-    responsive: false
+    responsive: false,
   };
-  public lineChartColors:Array<any> = [
-    { // grey
-      backgroundColor: 'rgba(148,159,177,0.2)',
-      borderColor: 'rgba(148,159,177,1)',
-      pointBackgroundColor: 'rgba(148,159,177,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-    },
-    { // dark grey
-      backgroundColor: 'rgba(77,83,96,0.2)',
-      borderColor: 'rgba(77,83,96,1)',
-      pointBackgroundColor: 'rgba(77,83,96,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(77,83,96,1)'
-    },
-    { // grey
-      backgroundColor: 'rgba(148,159,177,0.2)',
-      borderColor: 'rgba(148,159,177,1)',
-      pointBackgroundColor: 'rgba(148,159,177,1)',
-      pointBorderColor: '#fff',
-      pointHoverBackgroundColor: '#fff',
-      pointHoverBorderColor: 'rgba(148,159,177,0.8)'
-    }
-  ];
+
   public lineChartLegend:boolean = true;
   public lineChartType:string = 'line';
 
@@ -72,7 +50,5 @@ export class SearchStockComponent implements OnInit {
   public chartHovered(e:any):void {
     console.log(e);
   }
-
-
 
 }

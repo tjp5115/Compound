@@ -2,6 +2,7 @@ package com.compound.request.json.alpha.vantage;
 
 import com.google.api.client.util.Key;
 
+import java.time.LocalDate;
 import java.util.Map;
 
 public abstract class AlphaVantageJson {

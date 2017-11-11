@@ -4,6 +4,7 @@ import com.compound.request.builder.RequestBuilder;
 import com.compound.request.builder.stock.yoy.YearOverYearRequestBuilderFactory;
 import com.compound.request.json.alpha.vantage.AlphaVantageJsonWeekly;
 import com.compound.request.json.alpha.vantage.AlphaVantageStock;
+import com.compound.request.json.error.JsonErrorMessage;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpResponse;
@@ -47,6 +48,7 @@ public class CompoundController {
 
     } catch (IOException e) {
       e.printStackTrace();
+      json = new JsonErrorMessage("Error parsing request");
     }
     return json;
   }

@@ -6,5 +6,5 @@ import java.util.Map;
 
 public class CompoundJsonRoot {
   @Key
-  public Map<String,CompoundJsonStock> dateStock;
+  public Map<Integer,CompoundJsonDate> Year;
 }
