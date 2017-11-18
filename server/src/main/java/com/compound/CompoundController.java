@@ -38,7 +38,7 @@ public class CompoundController {
 
     RequestBuilder requestBuilder = REQUEST_BUILDER_FACTORY.getRequestBuilder(type, function, symbol);
     // The builder is taking care of what this should be casted too.
-    Object json = null;
+    Object json;
     try {
       HttpRequest request = requestFactory.buildGetRequest(requestBuilder.getUrl());
       HttpResponse response = request.execute();
@@ -46,7 +46,7 @@ public class CompoundController {
 
       json = requestBuilder.buildRequest(json);
 
-    } catch (IOException e) {
+    } catch (Exception e) {
       e.printStackTrace();
       json = new JsonErrorMessage("Error parsing request");
     }

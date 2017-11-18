@@ -6,17 +6,29 @@ import { AppComponent } from './app.component';
 import { SearchStockComponent } from './search-stock/search-stock.component';
 import { StockYearOverYearService } from './shared/stock/stock.year.over.year.service';
 import { ChartsModule } from 'ng2-charts';
+import {NotFoundComponent} from "./not-found/not-found.component";
+import {AppRoutingModule} from "./app-routing.module";
+import {FormsModule} from "@angular/forms";
+
+
+
 @NgModule({
   declarations: [
     AppComponent,
-    SearchStockComponent
+    SearchStockComponent,
+    NotFoundComponent
+
   ],
   imports: [
     BrowserModule,
     HttpModule,
-    ChartsModule
+    ChartsModule,
+    AppRoutingModule,
+    FormsModule
   ],
   providers: [StockYearOverYearService],
   bootstrap: [AppComponent]
 })
+
+
 export class AppModule { }

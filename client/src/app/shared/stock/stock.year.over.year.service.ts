@@ -8,7 +8,7 @@ export class StockYearOverYearService {
 
 constructor(private http: Http) {}
 
-  getAll(symbol : String): Observable<any> {
+  getSymbol(symbol : String): Observable<any> {
     return this.http.get('http://localhost:8080/stock/year-over-year/?symbol='+symbol)
       .map((response: Response) => response.json());
   }

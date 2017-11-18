@@ -8,31 +8,34 @@ import { StockYearOverYearService } from '../shared';
   providers: [StockYearOverYearService]
 })
 export class SearchStockComponent implements OnInit {
-  public lineChartData:Array<any> = new Array;
-  public lineChartLabels:Array<any> = new Array;
-  public json : any;
+  public lineChartData:Array<any>;
+  public lineChartLabels:Array<any>;
+  symbol : string;
   constructor(private stockService: StockYearOverYearService) { }
 
   ngOnInit() {
-    this.stockService.getAll("MSFT").subscribe(
-      stockDatadata => {
-        this.json = stockDatadata.Year;
-        Object.keys(this.json).forEach( year =>{
+  }
+
+  searchSymbol(){
+
+    this.lineChartData = new Array;
+    this.lineChartLabels = new Array();
+    this.stockService.getSymbol(this.symbol).subscribe(
+      stockData => {
+        var json  = stockData.Year;
+        Object.keys(json).forEach( year =>{
           var chartData : Array<number> = new Array(52);
-          var yearData = this.json[year].WeekOfYearToStock;
+          var yearData = json[year].WeekOfYearToStock;
           Object.keys(yearData).forEach( weekNumber =>{
             chartData[parseInt(weekNumber)-1] = yearData[weekNumber].value;
           });
           this.lineChartData.push({data : chartData, label : year, fill : false });
+          this.lineChartLabels = Array.from(new Array(52),(val,index)=>index+1);
         });
-        this.lineChartLabels = Array.from(new Array(52),(val,index)=>index+1);
-        this.json = JSON.stringify(this.json);
       },
       error => console.log(error)
     )
   }
-
-
 
   // lineChart
   public lineChartOptions:any = {

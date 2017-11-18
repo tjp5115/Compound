@@ -1,4 +1,8 @@
-{{lineChartData}}
+<form (ngSubmit)="searchSymbol()" #symbolForm="ngForm">
+  <label> Stock Symbol:
+   <input type="text" [(ngModel)]="symbol" name="symbol" />
+  </label>
+</form>
 <div class="row">
   <div class="col-md-6">
     <div style="display: block;">
@@ -13,3 +17,4 @@
     </div>
   </div>
 </div>
+
