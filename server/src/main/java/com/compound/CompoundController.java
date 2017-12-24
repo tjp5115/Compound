@@ -1,56 +1,45 @@
 package com.compound;
 
-import com.compound.request.builder.RequestBuilder;
-import com.compound.request.builder.stock.yoy.YearOverYearRequestBuilderFactory;
-import com.compound.request.json.alpha.vantage.AlphaVantageJsonWeekly;
-import com.compound.request.json.alpha.vantage.AlphaVantageStock;
-import com.compound.request.json.error.JsonErrorMessage;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestFactory;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.JsonObjectParser;
-import com.google.api.client.json.gson.GsonFactory;
-import com.google.api.client.util.ArrayMap;
-import org.springframework.util.CollectionUtils;
+import com.compound.service.CompoundStatsService;
+import com.compound.service.YearOverYearService;
+import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
-import java.util.*;
 
 @RestController
 public class CompoundController {
-  private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
-  private static final JsonFactory JSON_FACTORY = new GsonFactory();
-  private static final YearOverYearRequestBuilderFactory REQUEST_BUILDER_FACTORY = new YearOverYearRequestBuilderFactory();
+  static Logger logger = Logger.getLogger(CompoundController.class);
+
   @CrossOrigin(origins = "http://localhost:4200")
-  @GetMapping("/stock/year-over-year/")
+  @GetMapping("/year-over-year/stock")
   public Object stock(@RequestParam(defaultValue="ALPHA_VANTAGE") String type,
                                 @RequestParam() String symbol,
                                 @RequestParam(defaultValue="TIME_SERIES_WEEKLY") String function){
-    HttpRequestFactory requestFactory =
-        HTTP_TRANSPORT.createRequestFactory(request -> request.setParser(new JsonObjectParser(JSON_FACTORY)));
+    YearOverYearService yearOverYearService = new YearOverYearService();
+    return yearOverYearService.buildRequest(type,symbol,function);
+  }
 
-    RequestBuilder requestBuilder = REQUEST_BUILDER_FACTORY.getRequestBuilder(type, function, symbol);
-    // The builder is taking care of what this should be casted too.
-    Object json;
+  @CrossOrigin(origins = "http://localhost:4200")
+  @GetMapping("/compound/stats")
+  public Object stats(@RequestParam(defaultValue="ALPHA_VANTAGE") String type,
+                      @RequestParam(defaultValue="1") String symbol,
+                      @RequestParam(defaultValue="TIME_SERIES_WEEKLY") String function){
+
+    CompoundStatsService compoundStatsService = new CompoundStatsService();
     try {
-      HttpRequest request = requestFactory.buildGetRequest(requestBuilder.getUrl());
-      HttpResponse response = request.execute();
-      json = response.parseAs(requestBuilder.getJsonRoot().getClass());
-
-      json = requestBuilder.buildRequest(json);
-
-    } catch (Exception e) {
-      e.printStackTrace();
-      json = new JsonErrorMessage("Error parsing request");
+      return compoundStatsService.buildRequest(type,symbol,function);
+    }catch(NumberFormatException nfe){
+      logger.error("Number Format Exception while building request for:" +
+          " type[" + type + "], symbol["+symbol+"], function["+function+"]");
+      return null;
+    }catch (IOException e) {
+      logger.error("Error opening CSV file.");
+      return null;
     }
-    return json;
   }
 
 }

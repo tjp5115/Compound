@@ -3,10 +3,12 @@ import { RouterModule, Routes }  from '@angular/router';
 
 import {NotFoundComponent} from "./not-found/not-found.component";
 import {SearchStockComponent} from "./search-stock/search-stock.component";
+import {CompoundStatsComponent} from './compound-stats/compound-stats.component';
 
 const appRoutes: Routes = [
-  { path: 'search-stock',      component: SearchStockComponent },
   { path: '',   redirectTo: '/search-stock', pathMatch: 'full' },
+  { path: 'search-stock',      component: SearchStockComponent },
+  { path: 'compound-stats', component: CompoundStatsComponent },
   { path: '**', component: NotFoundComponent }
 ];
 
