@@ -1,3 +1,15 @@
-<p>
-  compound-stats works!
-</p>
+<form (ngSubmit)="searchSymbol()" #symbolForm="ngForm">
+  <label> Stock Symbol: </label>
+   <input type="text" [(ngModel)]="symbol" name="symbol" />
+
+   <label for="hmo">HMO</label>
+    <select id="hmo">
+      <option *ngFor="let statOption of statOptions">
+      	{{statOption}}
+      </option>
+    </select>
+</form>
+
+<div>
+	stats:
+</div>

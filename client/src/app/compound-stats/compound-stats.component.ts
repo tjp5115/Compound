@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./compound-stats.component.css']
 })
 export class CompoundStatsComponent implements OnInit {
-
+  public statOptions = [ 'yearOverYear' ];
   constructor() { }
 
   ngOnInit() {
