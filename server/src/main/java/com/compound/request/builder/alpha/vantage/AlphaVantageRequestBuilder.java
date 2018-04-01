@@ -70,6 +70,13 @@ public class AlphaVantageRequestBuilder implements RequestBuilder {
         return alphaVantageURL;
     }
 
+    /**
+     * Takes the AlphaVantageJson String, and outputs a JSON which is broken up into stock's info per
+     * TIME_PERIOD_SELECTED for each year the stock has been available.
+     * @param json - Will be one of the JSONs in the JSON_CLASS_MAP
+     * @return JSON that represents a stock's info per
+     * @throws ClassCastException
+     */
     @Override
     public CompoundJsonRoot buildRequest(Object json) throws ClassCastException {
         //todo make this generic. Only able to parse by week.
