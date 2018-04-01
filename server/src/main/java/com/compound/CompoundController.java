@@ -1,5 +1,6 @@
 package com.compound;
 
+import com.compound.request.json.error.JsonErrorMessage;
 import com.compound.service.CompoundStatsService;
 import com.compound.service.YearOverYearService;
 import org.apache.log4j.Logger;
@@ -17,8 +18,8 @@ public class CompoundController {
   @CrossOrigin(origins = "http://localhost:4200")
   @GetMapping("/year-over-year/stock")
   public Object stock(@RequestParam(defaultValue="ALPHA_VANTAGE") String type,
-                                @RequestParam() String symbol,
-                                @RequestParam(defaultValue="TIME_SERIES_WEEKLY") String function){
+                      @RequestParam() String symbol,
+                      @RequestParam(defaultValue="TIME_SERIES_WEEKLY") String function){
     YearOverYearService yearOverYearService = new YearOverYearService();
     return yearOverYearService.buildRequest(type,symbol,function);
   }
@@ -26,7 +27,7 @@ public class CompoundController {
   @CrossOrigin(origins = "http://localhost:4200")
   @GetMapping("/compound/stats")
   public Object stats(@RequestParam(defaultValue="ALPHA_VANTAGE") String type,
-                      @RequestParam(defaultValue="1") String symbol,
+                      @RequestParam() String symbol,
                       @RequestParam(defaultValue="TIME_SERIES_WEEKLY") String function){
 
     CompoundStatsService compoundStatsService = new CompoundStatsService();
@@ -35,10 +36,10 @@ public class CompoundController {
     }catch(NumberFormatException nfe){
       logger.error("Number Format Exception while building request for:" +
           " type[" + type + "], symbol["+symbol+"], function["+function+"]");
-      return null;
+      return new JsonErrorMessage("Number Formatting Error");
     }catch (IOException e) {
       logger.error("Error opening CSV file.");
-      return null;
+      return new JsonErrorMessage("IO Error");
     }
   }
 

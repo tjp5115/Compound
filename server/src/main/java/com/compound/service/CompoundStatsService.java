@@ -1,14 +1,14 @@
 package com.compound.service;
 
+import com.compound.request.json.compound.CompoundJsonDate;
 import com.compound.request.json.compound.CompoundJsonRoot;
+import com.compound.request.json.compound.CompoundJsonStock;
 import com.compound.request.json.compound.CompoundStats;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+import org.apache.commons.math3.stat.inference.OneWayAnova;
 
 import java.io.*;
-import java.time.LocalDate;
-import java.time.temporal.IsoFields;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
 public class CompoundStatsService {
     public CompoundStats buildRequest(String type, String symbol, String function) throws IOException {
@@ -17,27 +17,23 @@ public class CompoundStatsService {
 
         Collection<SummaryStatistics> stockYearStats = collectStats(compoundJsonRoot);
 
+
         CompoundStats compoundStats = new CompoundStats();
+        compoundStats.setOneWayAnova( new OneWayAnova().anovaPValue(stockYearStats,false));
         return compoundStats;
     }
 
     Collection<SummaryStatistics> collectStats(CompoundJsonRoot compoundJsonRoot) {
-        Collection<SummaryStatistics> stockYearStats = new ArrayList<>();
-
-        compoundJsonRoot.Year.forEach((year, stock) -> {
-            SummaryStatistics stockStats = new SummaryStatistics();
-            long numberOfWeeksInYear = IsoFields.WEEK_BASED_YEAR.rangeRefinedBy(LocalDate.of(year, 1, 1)).getMaximum();
-            for (int week = 0; week < numberOfWeeksInYear; ++week) {
-                stockStats.addValue(
-                    stock.WeekOfYearToStock.get(week) == null
-                        ? null
-                        : stock.WeekOfYearToStock.get(week).value
-                );
-            }
-            stockYearStats.add(stockStats);
+       SummaryStatistics[] weekStatistics = new SummaryStatistics[53];
+        compoundJsonRoot.Year.forEach((Integer year, CompoundJsonDate date) -> {
+            date.WeekOfYearToStock.forEach((Integer week, CompoundJsonStock stock) -> {
+                week = week - 1;
+                if (weekStatistics[week] == null) weekStatistics[week] = new SummaryStatistics();
+                weekStatistics[week].addValue(stock.value);
+            });
         });
 
-        return stockYearStats;
+        return Arrays.asList(weekStatistics);
     }
 
 
