@@ -1,6 +1,5 @@
 package com.compound.request.builder;
 
-import com.compound.request.json.compound.CompoundJsonRoot;
 import com.google.api.client.http.GenericUrl;
 
 public interface RequestBuilder {
@@ -24,6 +23,6 @@ public interface RequestBuilder {
    * build the request
    * @param json
    */
-  CompoundJsonRoot buildRequest(Object json) throws ClassCastException;
+  Object buildRequest(Object json) throws ClassCastException;
 
 }

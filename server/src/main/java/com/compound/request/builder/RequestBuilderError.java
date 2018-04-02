@@ -1,6 +1,6 @@
 package com.compound.request.builder;
 
-import com.compound.request.json.compound.CompoundJsonRoot;
+import com.compound.request.json.error.JsonErrorMessage;
 import com.google.api.client.http.GenericUrl;
 
 public class RequestBuilderError implements RequestBuilder{
@@ -20,7 +20,7 @@ public class RequestBuilderError implements RequestBuilder{
   }
 
   @Override
-  public CompoundJsonRoot buildRequest(Object json) throws ClassCastException {
-    return null;
+  public JsonErrorMessage buildRequest(Object json) throws ClassCastException {
+    return (JsonErrorMessage)json;
   }
 }

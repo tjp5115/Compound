@@ -22,16 +22,20 @@ export class SearchStockComponent implements OnInit {
     this.lineChartLabels = new Array();
     this.stockService.getSymbol(this.symbol).subscribe(
       stockData => {
-        var json  = stockData.Year;
-        Object.keys(json).forEach( year =>{
-          var chartData : Array<number> = new Array(52);
-          var yearData = json[year].WeekOfYearToStock;
-          Object.keys(yearData).forEach( weekNumber =>{
-            chartData[parseInt(weekNumber)-1] = yearData[weekNumber].value;
-          });
-          this.lineChartData.push({data : chartData, label : year, fill : false });
-          this.lineChartLabels = Array.from(new Array(52),(val,index)=>index+1);
+        var chartData = new Map();
+        stockData.forEach( stock =>{
+          var weekNumber = parseInt(stock.date.week);
+          var year = parseInt(stock.date.year);
+          if ( chartData.has( year ) == false ){
+            chartData.set(year, new Array(53));
+          }
+          chartData.get(year)[weekNumber-1] = stock.close;
         });
+
+        chartData.forEach( (weeks, year) => {
+          this.lineChartData.push({data : weeks, label : year, fill : false });
+        });
+        this.lineChartLabels = Array.from(new Array(52),(val,index)=>index+1);
       },
       error => console.log(error)
     )

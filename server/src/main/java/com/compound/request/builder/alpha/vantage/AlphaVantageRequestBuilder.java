@@ -5,16 +5,13 @@ import com.compound.request.builder.RequestBuilderError;
 import com.compound.request.json.alpha.vantage.AlphaVantageJson;
 import com.compound.request.json.alpha.vantage.AlphaVantageJsonWeekly;
 import com.compound.request.json.alpha.vantage.AlphaVantageStock;
-import com.compound.request.json.compound.CompoundJsonDate;
-import com.compound.request.json.compound.CompoundJsonRoot;
-import com.compound.request.json.compound.CompoundJsonStock;
+import com.compound.request.json.compound.*;
 import com.compound.request.url.AlphaVantageUrl;
 import com.google.api.client.http.GenericUrl;
 
 import java.lang.reflect.InvocationTargetException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.WeekFields;
 import java.util.*;
 
 public class AlphaVantageRequestBuilder implements RequestBuilder {
@@ -78,35 +75,22 @@ public class AlphaVantageRequestBuilder implements RequestBuilder {
      * @throws ClassCastException
      */
     @Override
-    public CompoundJsonRoot buildRequest(Object json) throws ClassCastException {
+    public Collection<StockSnapshot> buildRequest(Object json) throws ClassCastException {
         //todo make this generic. Only able to parse by week.
         jsonRoot = (AlphaVantageJson) json;
-
+        Collection<StockSnapshot> stock = new LinkedList<>();
         Map<String, AlphaVantageStock> alphaVantageJson = jsonRoot.getStockData();
 
-        List<LocalDate> keys = new ArrayList<>();
 
         for (String key : alphaVantageJson.keySet()) {
             LocalDate date = LocalDate.parse(key, DateTimeFormatter.ISO_LOCAL_DATE);
-            keys.add(date);
+            StockSnapshot stockSnapshot = new StockSnapshot();
+
+            stockSnapshot.setDate(date);
+            stockSnapshot.setStockPrice(jsonRoot.getStockData().get(date.toString()));
+            stock.add(stockSnapshot);
         }
 
-        Collections.sort(keys);
-        WeekFields weekFields = WeekFields.of(Locale.getDefault());
-
-        Map<Integer, CompoundJsonDate> stockYear = new LinkedHashMap<>();
-        for (LocalDate date : keys) {
-            if (stockYear.containsKey(date.getYear()) == false) {
-                CompoundJsonDate newStockDay = new CompoundJsonDate();
-                stockYear.put(date.getYear(), newStockDay);
-            }
-            CompoundJsonDate stockDay = stockYear.get(date.getYear());
-            CompoundJsonStock stock = new CompoundJsonStock(jsonRoot.getStockData().get(date.toString()).close);
-            int weekNumber = date.get(weekFields.weekOfWeekBasedYear());
-            stockDay.WeekOfYearToStock.put(weekNumber, stock);
-        }
-        CompoundJsonRoot compoundJsonRoot = new CompoundJsonRoot();
-        compoundJsonRoot.Year = stockYear;
-        return compoundJsonRoot;
+        return stock;
     }
 }

@@ -1,9 +1,7 @@
 package com.compound.service;
 
-import com.compound.request.json.compound.CompoundJsonDate;
-import com.compound.request.json.compound.CompoundJsonRoot;
-import com.compound.request.json.compound.CompoundJsonStock;
-import com.compound.request.json.compound.CompoundStats;
+import com.compound.request.json.compound.Statistics;
+import com.compound.request.json.compound.StockSnapshot;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
 import org.apache.commons.math3.stat.inference.OneWayAnova;
 
@@ -11,26 +9,24 @@ import java.io.*;
 import java.util.*;
 
 public class CompoundStatsService {
-    public CompoundStats buildRequest(String type, String symbol, String function) throws IOException {
+    public Statistics buildRequest(String type, String symbol, String function) throws IOException {
         YearOverYearService yearOverYearService = new YearOverYearService();
-        CompoundJsonRoot compoundJsonRoot = (CompoundJsonRoot) yearOverYearService.buildRequest(type, symbol, function);
+        Collection<StockSnapshot>  stock = (Collection<StockSnapshot>) yearOverYearService.buildRequest(type, symbol, function);
 
-        Collection<SummaryStatistics> stockYearStats = collectStats(compoundJsonRoot);
+        Collection<SummaryStatistics> stockYearStats = collectStats(stock);
 
 
-        CompoundStats compoundStats = new CompoundStats();
+        Statistics compoundStats = new Statistics();
         compoundStats.setOneWayAnova( new OneWayAnova().anovaPValue(stockYearStats,false));
         return compoundStats;
     }
 
-    Collection<SummaryStatistics> collectStats(CompoundJsonRoot compoundJsonRoot) {
-       SummaryStatistics[] weekStatistics = new SummaryStatistics[53];
-        compoundJsonRoot.Year.forEach((Integer year, CompoundJsonDate date) -> {
-            date.WeekOfYearToStock.forEach((Integer week, CompoundJsonStock stock) -> {
-                week = week - 1;
-                if (weekStatistics[week] == null) weekStatistics[week] = new SummaryStatistics();
-                weekStatistics[week].addValue(stock.value);
-            });
+    private List<SummaryStatistics> collectStats(Collection<StockSnapshot>  StockSnapshots) {
+        SummaryStatistics[] weekStatistics = new SummaryStatistics[53];
+        StockSnapshots.forEach( stockSnapshot -> {
+           int week = stockSnapshot.date.week - 1;
+           if (weekStatistics[week] == null) weekStatistics[week] = new SummaryStatistics();
+           weekStatistics[week].addValue(stockSnapshot.close);
         });
 
         return Arrays.asList(weekStatistics);
